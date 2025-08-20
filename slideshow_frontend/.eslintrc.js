@@ -2,40 +2,28 @@ module.exports = {
   root: true,
   env: {
     browser: true,
-    es2022: true,
     node: true,
   },
   extends: [
     'eslint:recommended',
     'plugin:vue/vue3-recommended',
     'plugin:@typescript-eslint/recommended',
-    'plugin:markdown/recommended',
     'prettier',
   ],
   parser: 'vue-eslint-parser',
   parserOptions: {
     parser: '@typescript-eslint/parser',
-    ecmaVersion: 'latest',
+    ecmaVersion: 2021,
     sourceType: 'module',
-    extraFileExtensions: ['.vue', '.md'],
   },
-  settings: {},
+  plugins: ['vue', '@typescript-eslint', 'prettier'],
   rules: {
+    'no-console': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
+    'no-debugger': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
     'vue/multi-word-component-names': 'off',
-    'vue/no-v-html': 'off',
     '@typescript-eslint/no-explicit-any': 'off',
+    '@typescript-eslint/no-var-requires': 'off',
+    'vue/no-v-html': 'off',
   },
-  overrides: [
-    {
-      files: ['**/*.md'],
-      processor: 'markdown/markdown',
-    },
-    {
-      files: ['**/*.md/*.{js,ts,vue}'],
-      parser: '@typescript-eslint/parser',
-      rules: {
-        'no-undef': 'off',
-      },
-    },
-  ],
-};
+  ignorePatterns: ['dist/**/*', 'node_modules/**/*', '*.d.ts'],
+}

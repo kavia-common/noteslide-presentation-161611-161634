@@ -1,42 +1,152 @@
 ---
-# You can also start simply with 'default'
+# Project-level configuration and theme
+title: NoteSlide Presentation
 theme: seriph
-# random image from a curated Unsplash collection by Anthony
-# like them? see https://unsplash.com/collections/94734566/slidev
 background: https://cover.sli.dev
-# some information about your slides (markdown enabled)
-title: Welcome to Slidev
 info: |
-  ## Slidev Starter Template
-  Presentation slides for developers.
+  ## NoteSlide Presentation
+  A Slidev presentation experience for your notes.
 
   Learn more at [Sli.dev](https://sli.dev)
-# apply unocss classes to the current slide
 class: text-center
-# https://sli.dev/features/drawing
 drawings:
   persist: false
-# slide transition: https://sli.dev/guide/animations.html#slide-transitions
-transition: slide-left
-# enable MDC Syntax: https://sli.dev/features/mdc
+
+# Branding colors and CSS variables
+css: unocss
+layout: cover
+highlighter: shiki
+routerMode: history
+
+# Default slide transition
+transition: fade-out
+
+# Enable MDC
 mdc: true
+
+# Color overrides and theme variables via CSS
+style: |
+  :root {
+    --brand-primary: #1976D2;
+    --brand-secondary: #424242;
+    --brand-accent: #FFC107;
+  }
+  html, body {
+    font-family: Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+  }
+  .brand-gradient {
+    background-image: linear-gradient(45deg, var(--brand-primary), var(--brand-accent));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .slidev-layout {
+    /* modern minimal spacing */
+    padding-top: 64px; /* leave room for fixed header */
+  }
+  .brand-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 0 16px;
+    background: rgba(255,255,255,0.75);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid rgba(0,0,0,0.06);
+    z-index: 30;
+  }
+  .dark .brand-header {
+    background: rgba(33,33,33,0.65);
+    border-bottom-color: rgba(255,255,255,0.06);
+  }
+  .brand-logo {
+    width: 28px; height: 28px; border-radius: 6px;
+    background: var(--brand-primary);
+    position: relative;
+  }
+  .brand-logo::after {
+    content: "";
+    position: absolute; inset: 6px;
+    border-radius: 4px;
+    background: var(--brand-accent);
+  }
+  .brand-title {
+    font-weight: 600;
+    letter-spacing: 0.2px;
+  }
+  .brand-controls {
+    margin-left: auto;
+    display: flex; gap: 8px;
+  }
+  .control-btn {
+    border: 1px solid rgba(0,0,0,0.08);
+    padding: 6px 10px; border-radius: 8px;
+    background: white;
+  }
+  .dark .control-btn {
+    background: #111214;
+    border-color: rgba(255,255,255,0.08);
+    color: #eaeaea;
+  }
+
+# Config: navigation bar always visible and toc sidebar
+configs:
+  themeConfig:
+    colors:
+      primary: "#1976D2"
+      secondary: "#424242"
+      accent: "#FFC107"
+  canvasWidth: 1200
+  aspectRatio: 16/9
+  transition: slide-left
+  controls: true
+  port: 3000
+  host: "0.0.0.0"
+  # enable presenter style controls for next/prev
+  shortcuts: true
+  remote: true
+
 ---
 
-# Welcome to Slidev
+# Welcome to NoteSlide
 
-Presentation slides for developers
+A modern, minimal Slidev deck styled for your notes.
 
-<div @click="$slidev.nav.next" class="mt-12 py-1" hover:bg="white op-10">
-  Press Space for next page <carbon:arrow-right />
+<!-- Global Header -->
+<div class="brand-header">
+  <div class="brand-logo" aria-hidden="true" />
+  <div class="brand-title">NoteSlide</div>
+  <div class="brand-controls">
+    <button class="control-btn" title="Previous" @click="$slidev.nav.prev()">
+      <carbon:chevron-left /> Prev
+    </button>
+    <button class="control-btn" title="Next" @click="$slidev.nav.next()">
+      Next <carbon:chevron-right />
+    </button>
+    <button class="control-btn" title="Toggle Dark" @click="$page.toggleDark()">
+      <carbon:moon /> / <carbon:sun />
+    </button>
+    <button class="control-btn" title="Open in Editor" @click="$slidev.nav.openInEditor">
+      <carbon:edit />
+    </button>
+  </div>
 </div>
 
-<div class="abs-br m-6 text-xl">
-  <button @click="$slidev.nav.openInEditor" title="Open in Editor" class="slidev-icon-btn">
-    <carbon:edit />
-  </button>
-  <a href="https://github.com/slidevjs/slidev" target="_blank" class="slidev-icon-btn">
-    <carbon:logo-github />
-  </a>
+<!-- Slide Overview Sidebar (collapsible on mobile) -->
+<div class="fixed left-0 top-16 bottom-0 w-52 md:w-64 p-3 overflow-auto hidden sm:block" style="border-right: 1px solid rgba(0,0,0,0.06);">
+  <div class="text-xs uppercase opacity-60 mb-2">Slides</div>
+  <Toc minDepth="1" maxDepth="2" />
+</div>
+
+<!-- Main content area with responsive padding to account for sidebar -->
+<div class="sm:pl-64 pl-0">
+  <div class="mt-6 text-sm opacity-70">
+    Press Space or click Next for the next slide <carbon:arrow-right />
+  </div>
 </div>
 
 <!--
@@ -47,21 +157,23 @@ The last comment block of each slide will be treated as slide notes. It will be 
 transition: fade-out
 ---
 
-# What is Slidev?
+transition: slide-up
+---
 
-Slidev is a slides maker and presenter designed for developers, consist of the following features
+# NoteSlide Features
 
-- 📝 **Text-based** - focus on the content with Markdown, and then style them later
-- 🎨 **Themable** - themes can be shared and re-used as npm packages
-- 🧑‍💻 **Developer Friendly** - code highlighting, live coding with autocompletion
-- 🤹 **Interactive** - embed Vue components to enhance your expressions
-- 🎥 **Recording** - built-in recording and camera view
-- 📤 **Portable** - export to PDF, PPTX, PNGs, or even a hostable SPA
-- 🛠 **Hackable** - virtually anything that's possible on a webpage is possible in Slidev
-<br>
-<br>
+<div v-motion :initial="{y: 20, opacity: 0}" :enter="{y:0, opacity:1, transition:{duration: 600}}">
+  - 🗒️ <b>Display notes as individual slides</b> — write in Markdown with rich text (bold, italic, code).
+  - ⌨️ <b>Next/Previous navigation</b> — keyboard arrows, space, or UI buttons.
+  - 📱 <b>Responsive</b> — adaptive layout for desktop and mobile.
+  - ✨ <b>Custom transitions</b> — slide, fade, and motion animations.
+  - 🔤 <b>Rich text formatting</b> — lists, quotes, code, callouts.
+  - 🌗 <b>Dark / Light</b> — quick toggle with brand-aware styling.
+</div>
 
-Read more about [Why Slidev?](https://sli.dev/guide/why)
+<div class="mt-6 text-4xl brand-gradient font-800">Focus on content. Present with style.</div>
+
+> Tip: Use the sidebar to jump to any slide or the controls to step through.
 
 <!--
 You can have `style` tag in markdown to override the style for the current page.
@@ -92,6 +204,10 @@ level: 2
 # Navigation
 
 Hover on the bottom-left corner to see the navigation's controls panel, [learn more](https://sli.dev/guide/ui#navigation-bar)
+
+On mobile:
+- The sidebar is hidden to maximize stage space.
+- Use on-screen Prev/Next controls in the header.
 
 ## Keyboard Shortcuts
 
@@ -135,44 +251,25 @@ layout: image-right
 image: https://cover.sli.dev
 ---
 
-# Code
+# Code and Rich Text
 
-Use code snippets and get the highlighting directly, and even types hover!
+Use code snippets with highlighting and motion.
 
-```ts {all|5|7|7-8|10|all} twoslash
-// TwoSlash enables TypeScript hover information
-// and errors in markdown code blocks
-// More at https://shiki.style/packages/twoslash
-
+```ts {all|3|4-6|all} twoslash
 import { computed, ref } from 'vue'
-
 const count = ref(0)
 const doubled = computed(() => count.value * 2)
-
-doubled.value = 2
+console.log(doubled.value)
 ```
 
-<arrow v-click="[4, 5]" x1="350" y1="310" x2="195" y2="334" color="#953" width="2" arrowSize="1" />
+- List items support <i>italic</i>, <b>bold</b>, and <code>inline code</code>.
+- Links: [Slidev Docs](https://sli.dev)
+- Callout:
+  > Minimal UI. Brand colors. Smooth transitions.
 
-<!-- This allow you to embed external code blocks -->
+<arrow v-click="[3]" x1="350" y1="310" x2="195" y2="334" color="#1976D2" width="2" arrowSize="1" />
+
 <<< @/snippets/external.ts#snippet
-
-<!-- Footer -->
-
-[Learn more](https://sli.dev/features/line-highlighting)
-
-<!-- Inline style -->
-<style>
-.footnotes-sep {
-  @apply mt-5 opacity-10;
-}
-.footnotes {
-  @apply text-sm opacity-75;
-}
-.footnote-backref {
-  display: none;
-}
-</style>
 
 <!--
 Notes can also sync with clicks
